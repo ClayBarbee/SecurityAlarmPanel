@@ -11,7 +11,7 @@
 
 metadata {
     // Automatically generated. Make future change here.
-    definition (name: "SecurityAlarmPanel", author: "brice@obycode.com") {
+    definition (name: "SecurityAlarmPanel", author: "brice@obycode.com", namespace: "securityalarmpanel") {
         capability "Alarm"
         capability "Switch"
         capability "Motion Sensor"
