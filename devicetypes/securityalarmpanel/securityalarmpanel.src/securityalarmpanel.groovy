@@ -48,14 +48,14 @@ metadata {
         command "away"
     }
 
-        // Simulator metadata
+    // Simulator metadata
     simulator {
             // status messages
             status "ping": "catchall: 0104 0000 01 01 0040 00 6A67 00 00 0000 0A 00 0A70696E67"
             status "hello": "catchall: 0104 0000 01 01 0040 00 0A21 00 00 0000 0A 00 0A48656c6c6f20576f726c6421"
     }
 
-        // UI tile definitions
+    // UI tile definitions
     tiles {
         
                 standardTile("alarmStatus", "device.alarmStatus", width: 2, height: 2, canChangeIcon: false, canChangeBackground: false) {
@@ -152,6 +152,7 @@ metadata {
 
 def parse(String description) {
 
+    log.debug "Start of Parse"
     log.debug description
     def stateToDisplay
     
@@ -161,7 +162,7 @@ def parse(String description) {
     
     if (!msg || msg.trim() == "ping") {
         result = createEvent(name: null, value: msg)
-//        update() 
+		// update() 
     } else if ( msg.length() >= 4 ) {
         // Process ready update
         if ( msg.substring(0, 2) == "RD" ) {
@@ -220,113 +221,64 @@ def parse(String description) {
                 sendEvent(name: "response",  value: "alarmStatus arming", type: alarmStatus)
             }
         } else if ( msg.substring(0, 2) == "SY" ) {
-         // Process various system statuses
+        // Process various system statuses
             if ( msg.substring(3, 6) == "658")  {
-            
                 result = createEvent(name: "systemStatus", value: "System Status\nKeypad Lockout")
-            
             }
             else if ( msg.substring(3, 6) == "670")  {
-            
                 result = createEvent(name: "systemStatus", value: "System Status\nInvalid Access Code")
-            
             }
             else if ( msg.substring(3, 6) == "672")  {
-            
                 result = createEvent(name: "systemStatus", value: "System Status\nFailed to arm")
-            
             }
             else if ( msg.substring(3, 6) == "802")  {
-
-                
                 result = createEvent(name: "systemStatus", value: "System Status\nPanel AC Trouble")
-
             }
             else if ( msg.substring(3, 6) == "803")  {
-
-                
                 result = createEvent(name: "systemStatus", value: "System Status\nPanel AC Trouble Rest")
-
             }
             else if ( msg.substring(3, 6) == "806")  {
-
-                
                 result = createEvent(name: "systemStatus", value: "System Status\nSystem Bell Trouble")
-
             }
             else if ( msg.substring(3, 6) == "807")  {
-
-                
                 result = createEvent(name: "systemStatus", value: "System Status\nSystem Bell Trouble Rest")
-
             }
             else if ( msg.substring(3, 6) == "810")  {
-
-                
                 result = createEvent(name: "systemStatus", value: "System Status\nTLM line 1 Trouble")
-
             }
             else if ( msg.substring(3, 6) == "811")  {
-
-                
                 result = createEvent(name: "systemStatus", value: "System Status\nTLM line 1 Trouble Rest")
-
             }
             else if ( msg.substring(3, 6) == "812")  {
-
-                
                 result = createEvent(name: "systemStatus", value: "System Status\nTLM line 2 Trouble")
-
             }
             else if ( msg.substring(3, 6) == "813")  {
-
-                
                 result = createEvent(name: "systemStatus", value: "System Status\nTLM line 2 Trouble Rest")
-
             }
             else if ( msg.substring(3, 6) == "821")  {
-
-                
                 result = createEvent(name: "systemStatus", value: "System Status\nLow Battery at " + substring(6,3))
-
             }
             else if ( msg.substring(3, 6) == "822")  {
-
-                
                 result = createEvent(name: "systemStatus", value: "System Status\nLow Battery Rest at " + substring(6,3))
-
             }
             else if ( msg.substring(3, 6) == "829")  {
-
                 result = createEvent(name: "systemStatus", value: "System Status\nSystem Tamper")
-
             }
             else if ( msg.substring(3, 6) == "830")  {
-
                 result = createEvent(name: "systemStatus", value: "System Status\nSystem Tamper Rest")
-
             }
             else if ( msg.substring(3, 6) == "840")  {
-
                 result = createEvent(name: "systemStatus", value: "System Status\nTrouble Status(LCD)")
-
             }
             else if ( msg.substring(3, 6) == "841")  {
-
                 result = createEvent(name: "systemStatus", value: "System Status\nTrouble Status Rest")
-
             }
             else if ( msg.substring(3, 6) == "896")  {
-
                 result = createEvent(name: "systemStatus", value: "System Status\nKeybus fault")
-
             }
             else if ( msg.substring(3, 6) == "897")  {
-
                 result = createEvent(name: "systemStatus", value: "System Status\nKeybus Fault Rest")
-
             }
-         
         // Process alarm update
         } else if ( msg.substring(0, 2) == "AL" ) {
             if (msg[3] == "1") {
@@ -353,7 +305,6 @@ def parse(String description) {
                 result = createEvent(name: "garageDoor", value: stateToDisplay)
 		// zone number below should match the one defined in ArduinoAlarmController
                 sendEvent(name: "response",  value: "r 1 closed", type: "Open/Closed Sensor")  
-
             }
             else if ( msg.substring(3, 9) == "609002" ){
                 stateToDisplay = "FD open"
@@ -506,7 +457,6 @@ def on() {
 def off() {
     disarm()
 }
-
 
 def away() {
     armAway()
